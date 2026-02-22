@@ -101,7 +101,7 @@
             margin-top: 10px;
         }
 
-        /* --- New Glowing Effects --- */
+        /* --- Glowing Effects --- */
         .glow-text {
             animation: text-pulse 1.5s infinite alternate;
         }
@@ -159,8 +159,14 @@
 
     <div id="screen-blocked" class="card hidden">
         <h1 style="color: #ef4444;">Access Denied 🛑</h1>
-        <p id="custom-message" style="font-size: 18px; font-weight: bold; color: #f8fafc;"></p>
+        <p id="custom-message" style="font-size: 18px; font-weight: bold; color: #f8fafc; line-height: 1.6;"></p>
         <button onclick="location.reload()" style="margin-top: 20px; background: #334155; color: white;">Go Back</button>
+    </div>
+
+    <div id="screen-roast" class="card hidden">
+        <h1 style="color: #f43f5e;">Zero Rizz Detected 🤡</h1>
+        <p id="roast-message" style="font-size: 18px; font-weight: bold; color: #cbd5e1; line-height: 1.6;"></p>
+        <button onclick="location.reload()" style="margin-top: 20px; background: #f43f5e; color: white;">Accept Defeat</button>
     </div>
 
     <script>
@@ -179,8 +185,20 @@
             "neha": "Prathamesh",
             "prachiti": "Prathamesh",
             "huzaifa": "Sadaf",
-            "sadaf": "Huzaifa"
+            "sadaf": "Huzaifa",
+            "adav": "Siddhi",
+            "siddhi": "Adav",
+            "kartik": "Ak47",
+            "ak47": "Kartik"
         };
+
+        // Brutal random roasts
+        const roasts = [
+            "Error 404: The algorithm searched 8 billion people and couldn't find a single person desperate enough for you. 💀",
+            "Bro really typed their name hoping for a miracle. Your destiny is just you, and a lifetime of being unpullable. 🤡",
+            "Soulmate.exe failed to load. Reason: User has absolutely negative rizz. Touch some grass.",
+            "Even the AI feels bad for you. No soulmate found. Maybe a tree will love you? 🌳"
+        ];
 
         let currentTarget = "";
 
@@ -223,7 +241,11 @@
                     document.getElementById("screen-tease").classList.remove("hidden");
                 }
             } else {
-                alert("Name not found in the Destiny Database. You are destined to be single. (Or ask the admin to add you!)");
+                // --- BRUTAL ROAST FOR UNKNOWN NAMES ---
+                let randomRoast = roasts[Math.floor(Math.random() * roasts.length)];
+                document.getElementById("screen-input").classList.add("hidden");
+                document.getElementById("roast-message").innerText = randomRoast;
+                document.getElementById("screen-roast").classList.remove("hidden");
             }
         }
 
