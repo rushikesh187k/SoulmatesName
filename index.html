@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Destiny Predictor</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: #0f172a; 
+            color: #f8fafc;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        .card {
+            background: #1e293b;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            max-width: 400px;
+            width: 90%;
+            transition: all 0.3s ease;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+            color: #38bdf8;
+        }
+
+        p {
+            font-size: 16px;
+            margin-bottom: 20px;
+            color: #cbd5e1;
+            line-height: 1.5;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            background: #0f172a;
+            color: white;
+            font-size: 16px;
+            outline: none;
+        }
+
+        input[type="text"]:focus {
+            border-color: #38bdf8;
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            background-color: #38bdf8;
+            color: #0f172a;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-bottom: 10px;
+        }
+
+        button:hover {
+            background-color: #0ea5e9;
+        }
+
+        .quiz-btn {
+            background-color: #334155;
+            color: white;
+        }
+
+        .quiz-btn:hover {
+            background-color: #475569;
+        }
+        
+        #reveal-text {
+            font-size: 32px;
+            font-weight: bold;
+            color: #10b981;
+            margin-top: 10px;
+        }
+
+        /* --- New Glowing Effects --- */
+        .glow-text {
+            animation: text-pulse 1.5s infinite alternate;
+        }
+
+        .glow-card {
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.6), 0 0 40px rgba(16, 185, 129, 0.4) !important;
+            border: 1px solid #10b981;
+        }
+
+        @keyframes text-pulse {
+            from {
+                text-shadow: 0 0 10px #10b981, 0 0 20px #10b981;
+                transform: scale(1);
+            }
+            to {
+                text-shadow: 0 0 20px #10b981, 0 0 30px #34d399, 0 0 40px #34d399;
+                transform: scale(1.05);
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="screen-input" class="card">
+        <h1>Destiny Matcher</h1>
+        <p>Enter your first name to discover your true soulmate.</p>
+        <input type="text" id="nameInput" placeholder="Enter your name..." autocomplete="off">
+        <button onclick="checkName()">Predict Soulmate</button>
+    </div>
+
+    <div id="screen-tease" class="card hidden">
+        <h1>Match Found!</h1>
+        <p>Your soulmate's name starts with:</p>
+        <h1 id="initials" style="color: #f43f5e; font-size: 36px;">--</h1>
+        <p>To unlock the full name, you must prove your intellect.</p>
+        <button onclick="showQuiz()">Take the Quiz</button>
+    </div>
+
+    <div id="screen-quiz" class="card hidden">
+        <h1>Intellect Verification</h1>
+        <p>What is the powerhouse of the cell?</p>
+        <button class="quiz-btn" onclick="wrongAnswer()">Nucleus</button>
+        <button class="quiz-btn" onclick="rightAnswer()">Mitochondria</button>
+        <button class="quiz-btn" onclick="wrongAnswer()">Ribosome</button>
+        <button class="quiz-btn" onclick="wrongAnswer()">Golgi Apparatus</button>
+    </div>
+
+    <div id="screen-reveal" class="card hidden">
+        <h1 style="color: #10b981;">100% Match Verified</h1>
+        <p>Your ultimate soulmate is...</p>
+        <div id="reveal-text">Name</div>
+        <br>
+        <button onclick="location.reload()" style="margin-top: 20px; background: #334155; color: white;">Try Another Name</button>
+    </div>
+
+    <div id="screen-blocked" class="card hidden">
+        <h1 style="color: #ef4444;">Access Denied 🛑</h1>
+        <p id="custom-message" style="font-size: 18px; font-weight: bold; color: #f8fafc;"></p>
+        <button onclick="location.reload()" style="margin-top: 20px; background: #334155; color: white;">Go Back</button>
+    </div>
+
+    <script>
+        // Dictionary of names and their soulmates
+        const soulmates = {
+            "rudra": "Arya",
+            "arya": "Rudra",
+            "vighnesh": "Madhu",
+            "madhu": "Vighnesh",
+            "shreyash": "Devyani",
+            "devyani": "Shreyash",
+            "sohom": "Suns",
+            "suns": "Sohom",
+            "nikhil": "Groundwaligirls",
+            "prathamesh": "Neha & Prachiti",
+            "neha": "Prathamesh",
+            "prachiti": "Prathamesh",
+            "huzaifa": "Sadaf",
+            "sadaf": "Huzaifa"
+        };
+
+        let currentTarget = "";
+
+        function checkName() {
+            let inputName = document.getElementById("nameInput").value.trim().toLowerCase();
+            
+            if (!inputName) {
+                alert("Please enter a name!");
+                return;
+            }
+
+            // --- SPECIAL EXCEPTION: RUSHIKESH ---
+            if (inputName === "rushikesh") {
+                document.getElementById("screen-input").classList.add("hidden");
+                document.getElementById("custom-message").innerText = "Anime is Rushikesh's favourite and u r not allowed to see his soulmate name bitch 😂";
+                document.getElementById("screen-blocked").classList.remove("hidden");
+                return;
+            }
+
+            // --- SPECIAL EXCEPTION: KANIKA ---
+            if (inputName === "kanika") {
+                document.getElementById("screen-input").classList.add("hidden");
+                document.getElementById("custom-message").innerText = "Kanjus ur are not allowed to see your soulmate 💀";
+                document.getElementById("screen-blocked").classList.remove("hidden");
+                return;
+            }
+
+            // --- NORMAL FLOW FOR EVERYONE ELSE ---
+            if (soulmates[inputName]) {
+                currentTarget = soulmates[inputName];
+                
+                // Special case for Nikhil: skip tease, go straight to quiz
+                if (inputName === "nikhil") {
+                    document.getElementById("screen-input").classList.add("hidden");
+                    document.getElementById("screen-quiz").classList.remove("hidden");
+                } else {
+                    let initials = currentTarget.substring(0, 2);
+                    document.getElementById("initials").innerText = initials;
+                    document.getElementById("screen-input").classList.add("hidden");
+                    document.getElementById("screen-tease").classList.remove("hidden");
+                }
+            } else {
+                alert("Name not found in the Destiny Database. You are destined to be single. (Or ask the admin to add you!)");
+            }
+        }
+
+        function showQuiz() {
+            document.getElementById("screen-tease").classList.add("hidden");
+            document.getElementById("screen-quiz").classList.remove("hidden");
+        }
+
+        function wrongAnswer() {
+            alert("Wrong! Go back to 8th-grade biology and try again.");
+        }
+
+        function rightAnswer() {
+            document.getElementById("screen-quiz").classList.add("hidden");
+            
+            // Set the name
+            let revealText = document.getElementById("reveal-text");
+            revealText.innerText = currentTarget;
+            
+            // Add the glowing effects!
+            revealText.classList.add("glow-text");
+            document.getElementById("screen-reveal").classList.add("glow-card");
+            
+            document.getElementById("screen-reveal").classList.remove("hidden");
+        }
+    </script>
+</body>
+</html>
