@@ -1,9 +1,9 @@
-
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Destiny Predictor</title>
+    <title>Destiny Predictor | Made by Shreyash</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
 
@@ -22,6 +22,7 @@
             align-items: center;
             height: 100vh;
             text-align: center;
+            flex-direction: column;
         }
 
         .card {
@@ -32,6 +33,7 @@
             max-width: 400px;
             width: 90%;
             transition: all 0.3s ease;
+            z-index: 10;
         }
 
         .hidden {
@@ -121,6 +123,17 @@
                 transform: scale(1.05);
             }
         }
+
+        /* --- Watermark --- */
+        .watermark {
+            position: fixed;
+            bottom: 20px;
+            color: #475569; /* Stealthy dark grey */
+            font-size: 14px;
+            font-weight: 600;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
     </style>
 </head>
 <body>
@@ -168,6 +181,8 @@
         <p id="roast-message" style="font-size: 18px; font-weight: bold; color: #cbd5e1; line-height: 1.6;"></p>
         <button onclick="location.reload()" style="margin-top: 20px; background: #f43f5e; color: white;">Accept Defeat</button>
     </div>
+
+    <div class="watermark">Made by Shreyash</div>
 
     <script>
         // Dictionary of names and their soulmates
